@@ -6,7 +6,12 @@ variable vpc_cidr {
 }
 
 variable public_cidrs {
-    type = string
-    default = "10.123.1.0/24"
+    type = list
+    default = ["10.123.1.0/24","10.123.3.0/24"]
+}
+
+variable private_cidrs {
+    type = list
+    default = ["10.123.2.0/24","10.123.4.0/24"]
 }
 
