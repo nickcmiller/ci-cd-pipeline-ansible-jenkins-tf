@@ -48,6 +48,13 @@ resource "aws_default_route_table" "private_route_table" {
     }
 }
 
-resource "aws_subnet" ""{
+resource "aws_subnet" "main_public_subnet" {
+    vpc_id = aws_vpc.main_vpc.id
+    cidr_block = var.public_cidrs
+    map_public_ip_on_launch = true
+    availability_zone = data.aws_availability_zones.available.names[0]
     
+    tags = {
+        Name = "main-public"
+    }
 }
