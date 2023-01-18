@@ -1,4 +1,10 @@
+locals {
+    azs = data.aws_availability_zones.available.names
+}
+
 data "aws_availability_zones" "available" {}
+
+
 
 resource "random_id" "random" {
     byte_length = 3
@@ -53,7 +59,7 @@ resource "aws_subnet" "main_public_subnet" {
     vpc_id = aws_vpc.main_vpc.id
     cidr_block = var.public_cidrs[count.index]
     map_public_ip_on_launch = true
-    availability_zone = data.aws_availability_zones.available.names[count.index]
+    availability_zone = local.azs[count.index]
     
     tags = {
         Name = "main-public-${count.index + 1}"
