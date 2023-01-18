@@ -1,3 +1,5 @@
+data "aws_availability_zones" "available" {}
+
 resource "random_id" "random" {
     byte_length = 3
 }
@@ -44,4 +46,8 @@ resource "aws_default_route_table" "private_route_table" {
     tags = {
         Name = "Main Private"
     }
+}
+
+resource "aws_subnet" ""{
+    
 }
