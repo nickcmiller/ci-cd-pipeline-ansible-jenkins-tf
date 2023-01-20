@@ -30,16 +30,20 @@ resource "aws_internet_gateway" "main_internet_gateway" {
     }
 }
 
-resource "aws_route_table" "main_route_table" {
+resource "aws_route_table" "public_route_table" {
     vpc_id = aws_vpc.main_vpc.id
     
     tags = {
         Name = "Main Public"
     }
+    
+     lifecycle {
+        create_before_destroy = true
+    }
 }
 
 resource "aws_route" "default_route" {
-    route_table_id = aws_route_table.main_route_table.id
+    route_table_id = aws_route_table.public_route_table.id
     destination_cidr_block = "0.0.0.0/0"
     gateway_id = aws_internet_gateway.main_internet_gateway.id
 }
@@ -49,6 +53,10 @@ resource "aws_default_route_table" "private_route_table" {
     
     tags = {
         Name = "Main Private"
+    }
+    
+     lifecycle {
+        create_before_destroy = true
     }
 }
 
@@ -74,4 +82,10 @@ resource "aws_subnet" "main_private_subnet" {
     tags = {
         Name = "main-private-${count.index + 1}"
     }
+}
+
+resource "aws_route_table_association" "main_public_assoc" {
+    count = length(local.azs)
+    subnet_id = aws_subnet.main_public_subnet[count.index].id
+    route_table_id = aws_route_table.public_route_table.id
 }
