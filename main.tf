@@ -1,3 +1,7 @@
+locals {
+    azs = data.aws_availability_zones.available.names
+}
+
 data "aws_availability_zones" "available" {}
 
 resource "random_id" "random" {
@@ -26,16 +30,20 @@ resource "aws_internet_gateway" "main_internet_gateway" {
     }
 }
 
-resource "aws_route_table" "main_route_table" {
+resource "aws_route_table" "public_route_table" {
     vpc_id = aws_vpc.main_vpc.id
     
     tags = {
         Name = "Main Public"
     }
+    
+     lifecycle {
+        create_before_destroy = true
+    }
 }
 
 resource "aws_route" "default_route" {
-    route_table_id = aws_route_table.main_route_table.id
+    route_table_id = aws_route_table.public_route_table.id
     destination_cidr_block = "0.0.0.0/0"
     gateway_id = aws_internet_gateway.main_internet_gateway.id
 }
@@ -46,14 +54,18 @@ resource "aws_default_route_table" "private_route_table" {
     tags = {
         Name = "Main Private"
     }
+    
+     lifecycle {
+        create_before_destroy = true
+    }
 }
 
 resource "aws_subnet" "main_public_subnet" {
-    count = length(var.public_cidrs)
+    count = length(local.azs)
     vpc_id = aws_vpc.main_vpc.id
-    cidr_block = var.public_cidrs[count.index]
+    cidr_block = cidrsubnet(var.vpc_cidr, 8, count.index)
     map_public_ip_on_launch = true
-    availability_zone = data.aws_availability_zones.available.names[count.index]
+    availability_zone = local.azs[count.index]
     
     tags = {
         Name = "main-public-${count.index + 1}"
@@ -61,13 +73,19 @@ resource "aws_subnet" "main_public_subnet" {
 }
 
 resource "aws_subnet" "main_private_subnet" {
-    count = length(var.private_cidrs)
+    count = length(local.azs)
     vpc_id = aws_vpc.main_vpc.id
-    cidr_block = var.private_cidrs[count.index]
+    cidr_block = cidrsubnet(var.vpc_cidr, 8, length(local.azs)+count.index)
     map_public_ip_on_launch = false
     availability_zone = data.aws_availability_zones.available.names[count.index]
     
     tags = {
         Name = "main-private-${count.index + 1}"
     }
+}
+
+resource "aws_route_table_association" "main_public_assoc" {
+    count = length(local.azs)
+    subnet_id = aws_subnet.main_public_subnet[count.index].id
+    route_table_id = aws_route_table.public_route_table.id
 }
