@@ -28,8 +28,12 @@ resource "aws_instance" "main_instance" {
     root_block_device {
         volume_size = var.main_vol_size
     }
-    
+    user_data = templatefile("./main-userdata.tpl", {new_hostname = "main-instance-${random_id.main_instance_random[count.index].dec}"})
     tags = {
         Name = "main-instance-${random_id.main_instance_random[count.index].dec}" 
     }
+}
+
+provisioner "local-exec" {
+    commnad = "printf \n${self.public_ip} >> aws_hosts"
 }
