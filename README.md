@@ -35,7 +35,6 @@ Below is a synopsis of what they Terraform files deploy.
     key_name="main_key"
     public_key_path= "/home/ec2-user/.ssh/main_key"
     ```
-* 
 
 ### Deploy first EC2 Instance
 
@@ -47,3 +46,9 @@ Below is a synopsis of what they Terraform files deploy.
 * Scale up the instances with the use of `count` in the instance
 
 #### Setup the user Data Template
+
+* Installs Grafana and gets it running
+
+#### Configure `local-exec` to record host names
+
+* Save host names in a text file called aws_hosts

@@ -32,8 +32,9 @@ resource "aws_instance" "main_instance" {
     tags = {
         Name = "main-instance-${random_id.main_instance_random[count.index].dec}" 
     }
+    
+    provisioner "local-exec" {
+        command = "printf '\n${self.public_ip}' >> aws_hosts"
+    }
 }
 
-provisioner "local-exec" {
-    commnad = "printf \n${self.public_ip} >> aws_hosts"
-}
