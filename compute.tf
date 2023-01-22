@@ -43,3 +43,16 @@ resource "aws_instance" "main_instance" {
     }
 }
 
+# resource "null_resource" "grafana_update" {
+#     count = var.main_instance_count
+#     provisioner "remote-exec" {
+#         inline = ["sudo apt upgrade -y grafana && touch upgrade.log && echo 'I updated Grafana' >> upgrade.log"]
+#         connection {
+#             type = "ssh"
+#             user = "ubuntu"
+#             private_key = file("/home/ec2-user/.ssh/main_key")
+#             host = aws_instance.main_instance[count.index].public_ip
+#         }
+#     }
+# }
+

@@ -1,38 +1,38 @@
 #root/variables.tf
 
-variable vpc_cidr {
-    type = string
-    default = "10.123.0.0/16"
+variable "vpc_cidr" {
+  type    = string
+  default = "10.123.0.0/16"
 }
 
-variable access_ip {
-    type = string
-    default = "0.0.0.0/0"
+variable "access_ip" {
+  type    = string
+  default = "0.0.0.0/0"
 }
 
-variable main_instance_type {
-    type = string
-    default = "t2.micro"
+variable "cloud9_ip" {
+  type = string
 }
 
-variable main_vol_size {
-    type = number
-    default = 8
+variable "main_instance_type" {
+  type    = string
+  default = "t2.micro"
 }
 
-variable main_instance_count {
-    type = number
-    default = 1
+variable "main_vol_size" {
+  type    = number
+  default = 8
 }
 
-variable key_name {
-    type = string
+variable "main_instance_count" {
+  type    = number
+  default = 1
 }
 
-variable public_key_path {
-    type = string
+variable "key_name" {
+  type = string
 }
 
-variable cloud9_ip {
-    type = string
+variable "public_key_path" {
+  type = string
 }

@@ -26,7 +26,7 @@ Below is a synopsis of what they Terraform files deploy.
     #Save it to the root Terraform folder when prompted
     Enter file in which to save the key (/home/ec2-user/.ssh/id_rsa): /home/ec2-user/.ssh/main_key       
     
-    #Next type in the passphrase on the following prompts
+    #Next leave these empty on the following prompts as we don't want a passphrase
     Enter passphrase (empty for no passphrase): 
     Enter same passphrase again:
     ```
@@ -52,3 +52,38 @@ Below is a synopsis of what they Terraform files deploy.
 #### Configure `local-exec` to record host names
 
 * Save host names in a text file called aws_hosts
+
+## Ansible
+
+### Install Ansbile on Centos
+
+To get Ansible for CentOS 7, first ensure that the CentOS 7 EPEL repository is installed:
+
+`sudo yum install epel-release`
+
+Once the repository is installed, install Ansible with yum:
+
+`sudo yum install ansible`
+
+### Ad Hoc Commands
+
+Intro guide can be founder here: https://docs.ansible.com/ansible/2.5/user_guide/intro_adhoc.html
+
+Builtin modules can be found here: https://docs.ansible.com/ansible/latest/collections/ansible/builtin/yum_module.html
+
+### Preparing Ansible to run on localhost
+
+We're going to need to make some host changes to run Ansible locally. You'll need to use `sudo vim`.
+
+In `/etc/ansible/ansible.cfg`, use change this value like so `host_key_checking = False`.
+
+In `/etc/ansible/hosts`, add the following to the top of the file:
+```
+[hosts]
+localhost
+[host:vars]
+ansible_connection=local ansible_python_interpreter=/usr/bin/python3
+
+```
+### Ansible Playbooks
+
