@@ -28,8 +28,31 @@ resource "aws_instance" "main_instance" {
     root_block_device {
         volume_size = var.main_vol_size
     }
-    
+    user_data = templatefile("./main-userdata.tpl", {new_hostname = "main-instance-${random_id.main_instance_random[count.index].dec}"})
     tags = {
         Name = "main-instance-${random_id.main_instance_random[count.index].dec}" 
     }
+    
+    provisioner "local-exec" {
+        command = "printf '\n${self.public_ip}' >> aws_hosts"
+    }
+    
+    provisioner "local-exec" {
+        when = destroy
+        command = "sed -i '/^[0-9]/d' aws_hosts"
+    }
 }
+
+# resource "null_resource" "grafana_update" {
+#     count = var.main_instance_count
+#     provisioner "remote-exec" {
+#         inline = ["sudo apt upgrade -y grafana && touch upgrade.log && echo 'I updated Grafana' >> upgrade.log"]
+#         connection {
+#             type = "ssh"
+#             user = "ubuntu"
+#             private_key = file("/home/ec2-user/.ssh/main_key")
+#             host = aws_instance.main_instance[count.index].public_ip
+#         }
+#     }
+# }
+
