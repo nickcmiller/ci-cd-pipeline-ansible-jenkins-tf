@@ -65,6 +65,9 @@ Once the repository is installed, install Ansible with yum:
 
 `sudo yum install ansible`
 
+Test that it is setup correctly with: 
+`ansible localhost -m ping`
+
 ### Ad Hoc Commands
 
 Intro guide can be founder here: https://docs.ansible.com/ansible/2.5/user_guide/intro_adhoc.html
