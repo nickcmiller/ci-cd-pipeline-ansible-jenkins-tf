@@ -90,3 +90,5 @@ ansible_connection=local ansible_python_interpreter=/usr/bin/python3
 ```
 ### Ansible Playbooks
 
+* Download the RPM Key for Grafana
+* Add Grafana repo to 
