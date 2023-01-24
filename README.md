@@ -78,7 +78,8 @@ Builtin modules can be found here: https://docs.ansible.com/ansible/latest/colle
 
 We're going to need to make some host changes to run Ansible locally. You'll need to use `sudo vim`.
 
-In `/etc/ansible/ansible.cfg`, use change this value like so `host_key_checking = False`.
+In `/etc/ansible/ansible.cfg`, use change this value like so `host_key_checking = False` to disable checking of host key of an SSH connection before connecting to it. This is a less secure setting but is useful for this lab.
+Still within the .cfg file, you'll also want to change `retry_files_enables=true`
 
 In `/etc/ansible/hosts`, add the following to the top of the file:
 ```
@@ -90,5 +91,13 @@ ansible_connection=local ansible_python_interpreter=/usr/bin/python3
 ```
 ### Ansible Playbooks
 
+#### Ansible Create File (playbooks/grafana.yml)
+
 * Download the RPM Key for Grafana
-* Add Grafana repo to 
+* Add Grafana Repo to 
+* 
+
+#### Ansible Destroy File (playbooks/grafana-destroy.yml)
+
+
+
