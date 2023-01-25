@@ -1,6 +1,6 @@
 ---
 - name: Install Grafana
-  hosts: hosts
+  hosts: main
   become: yes
   
   tasks:
@@ -10,9 +10,16 @@
       state: present
   - name: Add grafana repo to sources.list
     ansible.builtin.yum_repository:
-      baseurl: rpm https://packages.grafana.com/oss/rpm stable main
+      baseurl: https://packages.grafana.com/oss/rpm
       description: Grafana Repo
       name: grafana
       state: present
-  # - name: Update cache and install Grafana
-  # - name: Ensure Grafana is started and enabled
+  - name: Update cache and install Grafana
+    ansible.builtin.yum:
+      name: grafana
+      update_cache: yes
+  - name: Ensure Grafana is started and enabled
+    systemd:
+      name: grafana-server
+      state: started
+      enabled: yes
