@@ -40,22 +40,9 @@ resource "aws_instance" "main_instance" {
     
     provisioner "local-exec" {
         when = destroy
-        command = "sed -i '/^[0-9]/d' aws_hosts"
+        command = "sed -i '/^[0-9]/d' aws_hosts && sed '/^ *$/d' aws_hosts"
     }
 }
-
-# resource "null_resource" "grafana_update" {
-#     count = var.main_instance_count
-#     provisioner "remote-exec" {
-#         inline = ["sudo apt upgrade -y grafana && touch upgrade.log && echo 'I updated Grafana' >> upgrade.log"]
-#         connection {
-#             type = "ssh"
-#             user = "ubuntu"
-#             private_key = file("/home/ec2-user/.ssh/main_key")
-#             host = aws_instance.main_instance[count.index].public_ip
-#         }
-#     }
-# }
 
 resource "null_resource" "grafana_install" {
     depends_on = [aws_instance.main_instance]
