@@ -4,7 +4,7 @@ Building a pipeline with Ansible, Terraform, and Jenkins.
 
 ## Terraform Portion of Project
 
-Below is a synopsis of what they Terraform files deploy.
+Below is a synopsis of what the Terraform files deploy.
 
 ### Setup VPC and Network
 
@@ -49,7 +49,7 @@ Below is a synopsis of what they Terraform files deploy.
 
 * Installs Grafana and gets it running
 
-#### Configure `local-exec` to record host names
+#### Configure `local-exec`
 
 * Save host names in a text file called aws_hosts
 * Check the status of the instance being deployed and wait until it reaches "ok" status
