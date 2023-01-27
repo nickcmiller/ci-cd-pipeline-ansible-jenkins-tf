@@ -1,5 +1,5 @@
 ---
-- name: Install Grafana
+- name: Bootstrap Main Node
   hosts: main
   become: yes
   
@@ -23,3 +23,16 @@
       name: grafana-server
       state: started
       enabled: yes
+  - name: Download Prometheus
+  - name: Extract Prometheus Resources
+  - name: Create Prometheus Group
+  - name: Create Prometheus User
+  - name: Create Prometheus Directories
+  - name: Set Permissions
+  - name: Copy Files
+  - name: Second Copy of Files
+  - name: Create Config Files
+  - name: Create Systemd Files
+  - name: Ensure Prometheus is Started
+    
+    
