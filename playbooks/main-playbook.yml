@@ -24,15 +24,24 @@
       state: started
       enabled: yes
   - name: Download Prometheus
+    ansible.builtin.get_url:
+      url: https://github.com/prometheus/prometheus/releases/download/v2.41.0/prometheus-2.41.0.linux-amd64.tar.gz
+      dest: /home/ec2-user
   - name: Extract Prometheus Resources
+    ansible.builtin.unarchive:
+      src: /home/ec2-user/prometheus-2.41.0.linux-amd64.tar.gz
+      dest: /home/ec2-user
+      remote_src: yes
   - name: Create Prometheus Group
+    
   - name: Create Prometheus User
-  - name: Create Prometheus Directories
-  - name: Set Permissions
-  - name: Copy Files
-  - name: Second Copy of Files
-  - name: Create Config Files
-  - name: Create Systemd Files
-  - name: Ensure Prometheus is Started
+  
+  # - name: Create Prometheus Directories
+  # - name: Set Permissions
+  # - name: Copy Files
+  # - name: Second Copy of Files
+  # - name: Create Config Files
+  # - name: Create Systemd Files
+  # - name: Ensure Prometheus is Started
     
     

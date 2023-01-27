@@ -47,7 +47,7 @@ resource "aws_instance" "main_instance" {
 resource "null_resource" "grafana_install" {
     depends_on = [aws_instance.main_instance]
     provisioner "local-exec" {
-        command = "ansible-playbook -i aws_hosts --key-file /home/ec2-user/.ssh/main_key playbooks/grafana.yml"
+        command = "ansible-playbook -i aws_hosts --key-file /home/ec2-user/.ssh/main_key playbooks/main-playbook.yml"
     }
 }
 
