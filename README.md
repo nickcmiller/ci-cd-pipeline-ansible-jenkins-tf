@@ -92,12 +92,13 @@ ansible_connection=local ansible_python_interpreter=/usr/bin/python3
 ```
 ### Ansible Playbooks
 
-#### Ansible Create File (playbooks/grafana.yml)
+#### Ansible Create File (playbooks/main-playbook.yml)
 
 * Download the RPM Key for Grafana
 * Add Grafana Repo to host
 * Update cache and install Grafana
 * Start Grafana and enable it for future reboots
+* Download Prometheus
 
 #### Ansible Destroy File (playbooks/grafana-destroy.yml)
 
