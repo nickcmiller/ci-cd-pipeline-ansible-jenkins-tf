@@ -33,13 +33,47 @@
       dest: /home/ec2-user
       remote_src: yes
   - name: Create Prometheus Group
-    
+    ansible.builtin.group:
+      name: prometheus
+      state: present
   - name: Create Prometheus User
-  
-  # - name: Create Prometheus Directories
-  # - name: Set Permissions
-  # - name: Copy Files
-  # - name: Second Copy of Files
+    ansible.builtin.user:
+      name: prometheus
+      group: prometheus
+      shell: /sbin/nologin
+  - name: Create Prometheus Directories
+    ansible.builtin.file:
+      path: "{{ item }}"
+      state: directory
+      recurse: yes
+      owner: prometheus
+      group: prometheus
+      mode: '0755'
+    loop:
+      - /etc/prometheus
+      - /etc/prometheus/rules
+      - /etc/prometheus/rules.d
+      - /etc/prometheus/files_sd
+      - var/lib/prometheus
+  - name: Copy Files
+    ansible.builtin.copy:
+      src: "{{ item }}"
+      dest: /usr/local/bin
+      remote_src: yes
+      owner: prometheus
+      group: prometheus
+    loop:
+      - /home/ec2-user/prometheus-2.41.0.linux-amd64/prometheus
+      - /home/ec2-user/prometheus-2.41.0.linux-amd64/promtool
+  - name: Second Copy of Files
+    ansible.builtin.copy:
+      src: "{{ item }}"
+      dest: /etc/prometheus
+      remote_src: yes
+    loop:
+      - /home/ec2-user/prometheus-2.41.0.linux-amd64/consoles
+      - /home/ec2-user/prometheus-2.41.0.linux-amd64/console_libraries
+      
   # - name: Create Config Files
   # - name: Create Systemd Files
   # - name: Ensure Prometheus is Started
