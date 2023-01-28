@@ -2,9 +2,12 @@
 - name: Bootstrap Main Node
   hosts: main
   become: yes
+  vars:
+    listen_address: 0.0.0.0
+    listen_port: 9090
   
   tasks:
-  - name: download rpm key
+  - name: Download key for Grafana
     ansible.builtin.rpm_key:
       key: https://packages.grafana.com/gpg.key
       state: present
@@ -46,20 +49,21 @@
       path: "{{ item }}"
       state: directory
       recurse: yes
+      mode: '0755'
       owner: prometheus
       group: prometheus
-      mode: '0755'
     loop:
       - /etc/prometheus
       - /etc/prometheus/rules
       - /etc/prometheus/rules.d
       - /etc/prometheus/files_sd
-      - var/lib/prometheus
+      - /var/lib/prometheus
   - name: Copy Files
     ansible.builtin.copy:
       src: "{{ item }}"
       dest: /usr/local/bin
       remote_src: yes
+      mode: '0755'
       owner: prometheus
       group: prometheus
     loop:
@@ -73,9 +77,39 @@
     loop:
       - /home/ec2-user/prometheus-2.41.0.linux-amd64/consoles
       - /home/ec2-user/prometheus-2.41.0.linux-amd64/console_libraries
-      
-  # - name: Create Config Files
-  # - name: Create Systemd Files
-  # - name: Ensure Prometheus is Started
+  - name: Create Config Files
+    ansible.builtin.template:
+      src: prometheus.yml.j2
+      dest: /etc/prometheus/prometheus.yml
+  - name: Create Systemd Files
+    ansible.builtin.template:
+      src: prometheus.service.j2
+      dest: /etc/systemd/system/prometheus.service
+  - name: Ensure Prometheus is Started
+    ansible.builtin.systemd:
+      name: prometheus
+      state: started
+      enabled: yes
+  - name: Install java-openjdk11
+    ansible.builtin.command: "amazon-linux-extras install -y java-openjdk11"
+  - name: Download key for Jenkins
+    ansible.builtin.rpm_key:
+      key: https://pkg.jenkins.io/redhat-stable/jenkins.io.key
+      state: present
+  - name: Add Jenkins repo to sources.list
+    ansible.builtin.yum_repository:
+      baseurl: https://pkg.jenkins.io/redhat-stable
+      description: Jenkins Repo
+      name: jenkins
+      state: present
+  - name: Update cache and install Jenkins
+    ansible.builtin.yum:
+      name: jenkins
+      update_cache: yes
+  - name: Ensure Jenkins is started and enabled
+    systemd:
+      name: jenkins
+      state: started
+      enabled: yes
     
     
