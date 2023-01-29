@@ -92,17 +92,25 @@ ansible_connection=local ansible_python_interpreter=/usr/bin/python3
 ```
 ### Ansible Playbooks
 
-#### Ansible Create File (playbooks/main-playbook.yml)
+#### Ansible Jenkins Setup for Local Host (Deployment Node)
 
-* Download the RPM Key for Grafana
-* Add Grafana Repo to host
+* Setting up Jenkins on host where Terraform and Ansible will be run
+
+#### Ansible Create File for Main Nodes (playbooks/main-playbook.yml)
+
+* Download the RPM Key for Grafana and add Grafana Repo to host
 * Update cache and install Grafana
 * Start Grafana and enable it for future reboots
 * Download Prometheus
+* Create Prometheus Groups and Users
+* Create Prometheus Directories using an Ansible loop
+* Copy files using an Ansible loop
 
 #### Ansible Destroy File (playbooks/grafana-destroy.yml)
 
 * Undo the installation process
+
+
 
 
 
