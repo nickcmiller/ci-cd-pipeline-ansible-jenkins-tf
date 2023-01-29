@@ -118,21 +118,21 @@ resource "aws_security_group_rule" "egress_all" {
   security_group_id = aws_security_group.main_security_group.id
 }
 
-resource "aws_network_interface" "jenkins_interface" {
-  subnet_id = aws_subnet.main_public_subnet[0].id
-  private_ips = [cidrhost(aws_subnet.main_public_subnet[0].cidr_block, 80)]
-  tags = {
-    Name = "jenkins-interface"
-  }
-}
+# resource "aws_network_interface" "jenkins_interface" {
+#   subnet_id = aws_subnet.main_public_subnet[0].id
+#   private_ips = [cidrhost(aws_subnet.main_public_subnet[0].cidr_block, 80)]
+#   tags = {
+#     Name = "jenkins-interface"
+#   }
+# }
 
-resource "aws_eip_association" "jenkins_eip_association" {
-  network_interface_id = aws_network_interface.jenkins_interface.id
-  allocation_id = var.allocation_id
-}
+# resource "aws_eip_association" "jenkins_eip_association" {
+#   network_interface_id = aws_network_interface.jenkins_interface.id
+#   allocation_id = var.allocation_id
+# }
 
-resource "aws_network_interface_attachment" "jenkins_attachment" {
-  device_index = 1
-  network_interface_id = aws_network_interface.jenkins_interface.id
-  instance_id = aws_instance.main_instance[0].id
-}
+# resource "aws_network_interface_attachment" "jenkins_attachment" {
+#   device_index = 1
+#   network_interface_id = aws_network_interface.jenkins_interface.id
+#   instance_id = aws_instance.main_instance[0].id
+# }

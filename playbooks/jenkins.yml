@@ -1,0 +1,28 @@
+---
+- name: Bootstrap Main Node
+  hosts: localhost
+  become: yes 
+  
+  tasks:
+  - name: Install java-openjdk11
+    ansible.builtin.command: "sudo amazon-linux-extras install -y java-openjdk11"
+  - name: Download key for Jenkins
+    ansible.builtin.rpm_key:
+      key: https://pkg.jenkins.io/redhat-stable/jenkins.io.key
+      state: present
+  - name: Add Jenkins repo to sources.list
+    ansible.builtin.yum_repository:
+      baseurl: https://pkg.jenkins.io/redhat-stable
+      description: "Jenkins-stable"
+      name: jenkins
+      state: present
+  - name: Update cache and install Jenkins
+    ansible.builtin.yum:
+      name: jenkins
+      update_cache: yes
+  - name: Ensure Jenkins is started and enabled
+    systemd:
+      name: jenkins
+      state: started
+      enabled: yes
+    
