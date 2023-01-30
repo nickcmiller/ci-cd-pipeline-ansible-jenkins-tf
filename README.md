@@ -2,6 +2,16 @@
 
 Building a pipeline with Ansible, Terraform, and Jenkins.
 
+## Setting up the Cloud9
+
+### Resize Host 
+
+* Run `cloud9-resize.sh` to ensure you have enough disk space when doing this project
+
+### Install Ansible on host
+
+
+
 ## Terraform Portion of Project
 
 Below is a synopsis of what the Terraform files deploy.
@@ -110,7 +120,9 @@ ansible_connection=local ansible_python_interpreter=/usr/bin/python3
 
 * Undo the installation process
 
+## Jenkins
 
+Reference: https://github.com/jenkinsci/github-branch-source-plugin/blob/master/docs/github-app.adoc
 
-
+### Set up Jenkins on IDE
 

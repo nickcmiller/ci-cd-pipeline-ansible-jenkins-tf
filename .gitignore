@@ -1,3 +1,15 @@
+# Crash log files
+crash.log
+
+# Ansible
+*.retry
+
+#All .pem keys
+*.pem
+
+#tfvars files
+*.tfvars
+
 # Local .terraform directories
 **/.terraform/*
 
