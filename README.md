@@ -10,8 +10,6 @@ Building a pipeline with Ansible, Terraform, and Jenkins.
 
 ### Install Ansible on host
 
-
-
 ## Terraform Portion of Project
 
 Below is a synopsis of what the Terraform files deploy.
@@ -104,7 +102,7 @@ ansible_connection=local ansible_python_interpreter=/usr/bin/python3
 
 #### Ansible Jenkins Setup for Local Host (Deployment Node)
 
-* Setting up Jenkins on host where Terraform and Ansible will be run
+* Set up Jenkins on host where Terraform and Ansible will be run using an Ansible playbook
 
 #### Ansible Create File for Main Nodes (playbooks/main-playbook.yml)
 
@@ -129,13 +127,13 @@ Reference: https://github.com/jenkinsci/github-branch-source-plugin/blob/master/
 openssl pkcs8 -topk8 -inform PEM -outform PEM -in key-in-your-downloads-folder.pem -out converted-github-app.pem -nocrypt
 
 
-### Give Jenkins access to AWS credentials managed by SSM on EC2 host 
+### Giving Jenkins sudoer permissions
 
 ```
-export AWS_SDK_LOAD_CONFIG=true
-sudo usermod -a -G ec2-user jenkins
-sudo chown jenkins:jenkins /home/ec2-user/.aws/credentials
-sudo chmod g+r /home/ec2-user/.aws/credentials
+sudo service jenkins stop
+sudo cp -r /var/lib/jenkins/* /home
+sudo ln -s /home /var/lib/jenkins
+sudo service jenkins start
 ```
 
 ### Give Jenkins access to Terraform credentials
