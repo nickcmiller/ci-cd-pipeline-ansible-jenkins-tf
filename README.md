@@ -132,6 +132,10 @@ openssl pkcs8 -topk8 -inform PEM -outform PEM -in key-in-your-downloads-folder.p
 ### Give Jenkins access to AWS credentials managed by SSM on EC2 host 
 
 ```
-sudo chown ec2-user:jenkins /home/ec2-user/.aws/credentials
+export AWS_SDK_LOAD_CONFIG=true
+sudo usermod -a -G ec2-user jenkins
+sudo chown jenkins:jenkins /home/ec2-user/.aws/credentials
 sudo chmod g+r /home/ec2-user/.aws/credentials
 ```
+
+### Give Jenkins access to Terraform credentials
