@@ -6,7 +6,7 @@ Building a pipeline with Ansible, Terraform, and Jenkins.
 
 ### Resize Host 
 
-* Run `cloud9-resize.sh` in `notes` to ensure you have enough disk space when doing this project
+* Run `cloud9-resize.sh` in `scripts` to ensure you have enough disk space when doing this project
 
 ### Install Ansible on host
 
