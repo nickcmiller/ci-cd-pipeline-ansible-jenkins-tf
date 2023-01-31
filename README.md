@@ -6,7 +6,7 @@ Building a pipeline with Ansible, Terraform, and Jenkins.
 
 ### Resize Host 
 
-* Run `cloud9-resize.sh` to ensure you have enough disk space when doing this project
+* Run `cloud9-resize.sh` in `notes` to ensure you have enough disk space when doing this project
 
 ### Install Ansible on host
 
@@ -122,7 +122,8 @@ ansible_connection=local ansible_python_interpreter=/usr/bin/python3
 
 ## Jenkins
 
+### Integrate Jenkins with Github
+
 Reference: https://github.com/jenkinsci/github-branch-source-plugin/blob/master/docs/github-app.adoc
 
-### Set up Jenkins on IDE
-
+openssl pkcs8 -topk8 -inform PEM -outform PEM -in key-in-your-downloads-folder.pem -out converted-github-app.pem -nocrypt
