@@ -127,3 +127,11 @@ ansible_connection=local ansible_python_interpreter=/usr/bin/python3
 Reference: https://github.com/jenkinsci/github-branch-source-plugin/blob/master/docs/github-app.adoc
 
 openssl pkcs8 -topk8 -inform PEM -outform PEM -in key-in-your-downloads-folder.pem -out converted-github-app.pem -nocrypt
+
+
+### Give Jenkins access to AWS credentials managed by SSM on EC2 host 
+
+```
+sudo chown ec2-user:jenkins /home/ec2-user/.aws/credentials
+sudo chmod g+r /home/ec2-user/.aws/credentials
+```
