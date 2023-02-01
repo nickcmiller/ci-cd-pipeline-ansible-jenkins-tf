@@ -127,28 +127,11 @@ Reference: https://github.com/jenkinsci/github-branch-source-plugin/blob/master/
 openssl pkcs8 -topk8 -inform PEM -outform PEM -in key-in-your-downloads-folder.pem -out converted-github-app.pem -nocrypt
 
 
-### Move Jenkins File to /home directory
+### Giving jenkins permissions for ec2-user file
 
-* 
-    ```
-    sudo service jenkins stop
-    ```
-
-* 
-    ```
-    sudo mkdir /home/jenkins
-    sudo cp -r /var/lib/jenkins/* /home/jenkins
-    sudo rm -rf /var/lib/jenkins
-    sudo ln -s /home/jenkins /var/lib/jenkins
-    sudo chown -R jenkins:jenkins /home/jenkins
-    sudo usermod -d /home/jenkins jenkins
-    sudo service jenkins start
-    ```
-*
-    ```
-    sudo chown -R jenkins:jenkins /home/jenkins
-    sudo usermod -d /home/jenkins jenkins
-    sudo service jenkins start
-    ```
+```
+sudo usermod -aG jenkins ec2-user
+sudo chmod 775 /home/ec2-user
+```
 
 ### Give Jenkins access to Terraform credentials
