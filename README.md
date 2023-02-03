@@ -150,5 +150,31 @@ openssl pkcs8 -topk8 -inform PEM -outform PEM -in key-in-your-downloads-folder.p
     sudo usermod -d /home/jenkins jenkins
     sudo service jenkins start
     ```
+*
+
+To change the jenkins user, open the `/etc/sysconfig/jenkins` and change the JENKINS_USER to `ec2-user`. You'll also need to open `/etc/systemd/system/multi-user.target.wants/jenkins.service` and change `user` and `group` to `ec2-user`
+
+```
+    #Change $JENKINS_USER="ec2-user"
+    vim /etc/sysconfig/jenkins 
+    
+    #Change user and group to ec2-user
+    vim /etc/systemd/system/multi-user.target.wants/jenkins.service
+```
+
+Then change the ownership of the Jenkins home, Jenkins webroot and logs.
+```
+    sudo chown -R ec2-user:ec2-user /var/lib/jenkins 
+    sudo chown -R ec2-user:ec2-user /var/cache/jenkins
+    sudo chown -R ec2-user:ec2-user /var/log/jenkins
+```
+Then restarted the Jenkins jenkins and check the user has changed using a ps command
+```
+    sudo systemctl daemon-reload
+    /etc/init.d/jenkins restart
+    ps -ef | grep jenkins
+```
 
 ### Give Jenkins access to Terraform credentials
+
+
