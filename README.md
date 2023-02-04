@@ -126,53 +126,33 @@ Reference: https://github.com/jenkinsci/github-branch-source-plugin/blob/master/
 
 openssl pkcs8 -topk8 -inform PEM -outform PEM -in key-in-your-downloads-folder.pem -out converted-github-app.pem -nocrypt
 
-
-### Move Jenkins File to /home directory
-
-* 
-    ```
-    sudo service jenkins stop
-    ```
-
-* 
-    ```
-    sudo mkdir /home/jenkins
-    sudo cp -r /var/lib/jenkins/* /home/jenkins
-    sudo rm -rf /var/lib/jenkins
-    sudo ln -s /home/jenkins /var/lib/jenkins
-    sudo chown -R jenkins:jenkins /home/jenkins
-    sudo usermod -d /home/jenkins jenkins
-    sudo service jenkins start
-    ```
-*
-    ```
-    sudo chown -R jenkins:jenkins /home/jenkins
-    sudo usermod -d /home/jenkins jenkins
-    sudo service jenkins start
-    ```
-*
+### Switch the Jenkins user to ec2-user
 
 To change the jenkins user, open the `/etc/sysconfig/jenkins` and change the JENKINS_USER to `ec2-user`. You'll also need to open `/etc/systemd/system/multi-user.target.wants/jenkins.service` and change `user` and `group` to `ec2-user`
 
 ```
-    #Change $JENKINS_USER="ec2-user"
-    vim /etc/sysconfig/jenkins 
-    
-    #Change user and group to ec2-user
-    vim /etc/systemd/system/multi-user.target.wants/jenkins.service
+#Change $JENKINS_USER="ec2-user"
+vim /etc/sysconfig/jenkins 
+
+#Change user and group to ec2-user
+vim /etc/systemd/system/multi-user.target.wants/jenkins.service
 ```
 
 Then change the ownership of the Jenkins home, Jenkins webroot and logs.
 ```
-    sudo chown -R ec2-user:ec2-user /var/lib/jenkins 
-    sudo chown -R ec2-user:ec2-user /var/cache/jenkins
-    sudo chown -R ec2-user:ec2-user /var/log/jenkins
+sudo chown -R ec2-user:ec2-user /var/lib/jenkins 
+sudo chown -R ec2-user:ec2-user /var/cache/jenkins
+sudo chown -R ec2-user:ec2-user /var/log/jenkins
 ```
 Then restarted the Jenkins jenkins and check the user has changed using a ps command
 ```
-    sudo systemctl daemon-reload
-    /etc/init.d/jenkins restart
-    ps -ef | grep jenkins
+sudo systemctl daemon-reload
+/etc/init.d/jenkins restart
+```
+
+If Jenkins is now running but you cannot connect through the browser, make sure you're using `http`. If it's still not working try adding a firewall rule to allow incoming traffic on TCP port 8080:
+```
+sudo iptables -A INPUT -p tcp --dport 8080 -j ACCEPT
 ```
 
 ### Give Jenkins access to Terraform credentials
