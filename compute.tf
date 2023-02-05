@@ -44,12 +44,12 @@ resource "aws_instance" "main_instance" {
     }
 }
 
-resource "null_resource" "grafana_install" {
-    depends_on = [aws_instance.main_instance]
-    provisioner "local-exec" {
-        command = "ansible-playbook -i aws_hosts --key-file /home/ec2-user/.ssh/main_key playbooks/main-playbook.yml"
-    }
-}
+# resource "null_resource" "grafana_install" {
+#     depends_on = [aws_instance.main_instance]
+#     provisioner "local-exec" {
+#         command = "ansible-playbook -i aws_hosts --key-file /home/ec2-user/.ssh/main_key playbooks/main-playbook.yml"
+#     }
+# }
 
 output "grafana_access" {
     value = {for i in aws_instance.main_instance[*] : i.tags.Name => "${i.public_ip}:3000"}
