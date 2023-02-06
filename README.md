@@ -8,7 +8,82 @@ Building a pipeline with Ansible, Terraform, and Jenkins.
 
 * Run `cloud9-resize.sh` in `scripts` to ensure you have enough disk space when doing this project
 
-### Install Ansible on host
+## Ansible on local
+
+### Install Ansbile on Centos
+
+To get Ansible for CentOS 7, first ensure that the CentOS 7 EPEL repository is installed:
+
+`sudo yum install epel-release`
+
+Once the repository is installed, install Ansible with yum:
+
+`sudo yum install ansible`
+
+Test that it is setup correctly with: 
+`ansible localhost -m ping`
+
+### Ad Hoc Commands
+
+Intro guide can be founder here: https://docs.ansible.com/ansible/2.5/user_guide/intro_adhoc.html
+
+Builtin modules can be found here: https://docs.ansible.com/ansible/latest/collections/ansible/builtin/yum_module.html
+
+### Preparing Ansible to run on localhost
+
+We're going to need to make some host changes to run Ansible locally. You'll need to use `sudo vim`.
+
+In `/etc/ansible/ansible.cfg`, use change this value like so `host_key_checking = False` to disable checking of host key of an SSH connection before connecting to it. This is a less secure setting but is useful for this lab.
+Still within the .cfg file, you'll also want to change `retry_files_enables=true` and set the retry save path to the host `retry_files_save_path = ~/environment/ci-cd-pipeline-ansible-jenkins-tf/.ansible-retry`
+
+In `/etc/ansible/hosts`, add the following to the top of the file:
+```
+[hosts]
+localhost
+[host:vars]
+ansible_connection=local ansible_python_interpreter=/usr/bin/python3
+
+```
+
+## Jenkins
+
+### Integrate Jenkins with Github
+
+Reference: https://github.com/jenkinsci/github-branch-source-plugin/blob/master/docs/github-app.adoc
+
+`openssl pkcs8 -topk8 -inform PEM -outform PEM -in key-in-your-downloads-folder.pem -out converted-github-app.pem -nocrypt`
+
+### Switch the Jenkins user to ec2-user
+
+To change the jenkins user, open the `/etc/sysconfig/jenkins` and change the JENKINS_USER to `ec2-user`. You'll also need to open `/etc/systemd/system/multi-user.target.wants/jenkins.service` and change `user` and `group` to `ec2-user`
+
+```
+#Change $JENKINS_USER="ec2-user"
+vim /etc/sysconfig/jenkins 
+
+#Change user and group to ec2-user
+vim /etc/systemd/system/multi-user.target.wants/jenkins.service
+```
+
+Then change the ownership of the Jenkins home, Jenkins webroot and logs.
+```
+sudo chown -R ec2-user:ec2-user /var/lib/jenkins 
+sudo chown -R ec2-user:ec2-user /var/cache/jenkins
+sudo chown -R ec2-user:ec2-user /var/log/jenkins
+```
+Then restarted the Jenkins jenkins and check the user has changed using a ps command
+```
+sudo systemctl daemon-reload
+/etc/init.d/jenkins restart
+```
+
+If Jenkins is now running but you cannot connect through the browser, make sure you're using `http`. If it's still not working try adding a firewall rule to allow incoming traffic on TCP port 8080:
+```
+sudo iptables -A INPUT -p tcp --dport 8080 -j ACCEPT
+```
+
+### Give Jenkins access to Terraform credentials
+
 
 ## Terraform Portion of Project
 
@@ -62,43 +137,7 @@ Below is a synopsis of what the Terraform files deploy.
 * Save host names in a text file called aws_hosts
 * Check the status of the instance being deployed and wait until it reaches "ok" status
 
-## Ansible
-
-### Install Ansbile on Centos
-
-To get Ansible for CentOS 7, first ensure that the CentOS 7 EPEL repository is installed:
-
-`sudo yum install epel-release`
-
-Once the repository is installed, install Ansible with yum:
-
-`sudo yum install ansible`
-
-Test that it is setup correctly with: 
-`ansible localhost -m ping`
-
-### Ad Hoc Commands
-
-Intro guide can be founder here: https://docs.ansible.com/ansible/2.5/user_guide/intro_adhoc.html
-
-Builtin modules can be found here: https://docs.ansible.com/ansible/latest/collections/ansible/builtin/yum_module.html
-
-### Preparing Ansible to run on localhost
-
-We're going to need to make some host changes to run Ansible locally. You'll need to use `sudo vim`.
-
-In `/etc/ansible/ansible.cfg`, use change this value like so `host_key_checking = False` to disable checking of host key of an SSH connection before connecting to it. This is a less secure setting but is useful for this lab.
-Still within the .cfg file, you'll also want to change `retry_files_enables=true` and set the retry save path to the host `retry_files_save_path = ~/environment/ci-cd-pipeline-ansible-jenkins-tf/.ansible-retry`
-
-In `/etc/ansible/hosts`, add the following to the top of the file:
-```
-[hosts]
-localhost
-[host:vars]
-ansible_connection=local ansible_python_interpreter=/usr/bin/python3
-
-```
-### Ansible Playbooks
+## Ansible Playbooks
 
 #### Ansible Jenkins Setup for Local Host (Deployment Node)
 
@@ -117,44 +156,3 @@ ansible_connection=local ansible_python_interpreter=/usr/bin/python3
 #### Ansible Destroy File (playbooks/grafana-destroy.yml)
 
 * Undo the installation process
-
-## Jenkins
-
-### Integrate Jenkins with Github
-
-Reference: https://github.com/jenkinsci/github-branch-source-plugin/blob/master/docs/github-app.adoc
-
-openssl pkcs8 -topk8 -inform PEM -outform PEM -in key-in-your-downloads-folder.pem -out converted-github-app.pem -nocrypt
-
-### Switch the Jenkins user to ec2-user
-
-To change the jenkins user, open the `/etc/sysconfig/jenkins` and change the JENKINS_USER to `ec2-user`. You'll also need to open `/etc/systemd/system/multi-user.target.wants/jenkins.service` and change `user` and `group` to `ec2-user`
-
-```
-#Change $JENKINS_USER="ec2-user"
-vim /etc/sysconfig/jenkins 
-
-#Change user and group to ec2-user
-vim /etc/systemd/system/multi-user.target.wants/jenkins.service
-```
-
-Then change the ownership of the Jenkins home, Jenkins webroot and logs.
-```
-sudo chown -R ec2-user:ec2-user /var/lib/jenkins 
-sudo chown -R ec2-user:ec2-user /var/cache/jenkins
-sudo chown -R ec2-user:ec2-user /var/log/jenkins
-```
-Then restarted the Jenkins jenkins and check the user has changed using a ps command
-```
-sudo systemctl daemon-reload
-/etc/init.d/jenkins restart
-```
-
-If Jenkins is now running but you cannot connect through the browser, make sure you're using `http`. If it's still not working try adding a firewall rule to allow incoming traffic on TCP port 8080:
-```
-sudo iptables -A INPUT -p tcp --dport 8080 -j ACCEPT
-```
-
-### Give Jenkins access to Terraform credentials
-
-
