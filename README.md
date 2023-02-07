@@ -21,6 +21,7 @@ Once the repository is installed, install Ansible with yum:
 `sudo yum install ansible`
 
 Test that it is setup correctly with: 
+
 `ansible localhost -m ping`
 
 ### Ad Hoc Commands
@@ -46,6 +47,10 @@ ansible_connection=local ansible_python_interpreter=/usr/bin/python3
 ```
 
 ## Jenkins
+
+### Install Ansible using the Jenkins playbook
+
+Run `ansible-playbook ./playbooks/jenkins.yml`
 
 ### Integrate Jenkins with Github
 
