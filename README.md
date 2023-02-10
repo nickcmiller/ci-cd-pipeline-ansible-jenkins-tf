@@ -87,7 +87,28 @@ If Jenkins is now running but you cannot connect through the browser, make sure 
 sudo iptables -A INPUT -p tcp --dport 8080 -j ACCEPT
 ```
 
-### Give Jenkins access to Terraform credentials
+### Jenkins Pipeline
+
+#### Step 1
+
+```
+export TF_IN_AUTOMATION=true
+terraform init -no-color
+```
+
+#### Step 2
+
+```
+export TF_IN_AUTOMATION=true
+terraform plan -no-color
+```
+
+#### Step 3
+
+```
+export TF_IN_AUTOMATION=true
+terraform apply -auto-approve -no-color
+```
 
 
 ## Terraform Portion of Project
