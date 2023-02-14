@@ -25,15 +25,17 @@ pipeline {
                 sh 'aws ec2 wait instance-status-ok --region us-east-1'
             }
         }
-        stage('Ansible'){
-            ansiblePlaybook(
-                    playbook: 'playbooks/main-playbook.yml',
-                    inventory: 'aws_hosts',
-                    credentialsId: 'ec2-ssh-key',
-                    extrasVars: [
-                        'ansible_ssh_common_args': '-o StrictHostKeyChecking=no'
-                    ]
-            )
+        stage('Ansible') {
+            steps {
+                ansiblePlaybook(
+                        playbook: 'playbooks/main-playbook.yml',
+                        inventory: 'aws_hosts',
+                        credentialsId: 'ec2-ssh-key',
+                        extrasVars: [
+                            'ansible_ssh_common_args': '-o StrictHostKeyChecking=no'
+                        ]
+                )
+            }
         }
         stage('Destroy') {
             steps {
