@@ -30,7 +30,7 @@ pipeline {
                 ansiblePlaybook(
                     playbook: 'playbooks/main-playbook.yml',
                     inventory: 'aws_hosts',
-                    keyFile: 'ec2-ssh-key'
+                    credentialsId: 'ec2-ssh-key'
                 )
             }
         }
