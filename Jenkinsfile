@@ -22,12 +22,12 @@ pipeline {
         }
         stage('Ansible'){
             steps {
+                sh 'cat aws_hosts'
                 sh 'ansible-playbook -i aws_hosts --key-file /home/ec2-user/.ssh/main_key playbooks/main-playbook.yml'
             }
         }
         stage('Wait') {
             steps {
-                sh 'cat aws_hosts'
                 sh 'aws ec2 wait instance-status-ok --region us-east-1'
             }
         }
