@@ -31,7 +31,7 @@ pipeline {
                         playbook: 'playbooks/main-playbook.yml',
                         inventory: 'aws_hosts',
                         credentialsId: 'ec2-ssh-key',
-                        extrasVars: [
+                        extraVars: [
                             'ansible_ssh_common_args': '-o StrictHostKeyChecking=no'
                         ]
                 )
