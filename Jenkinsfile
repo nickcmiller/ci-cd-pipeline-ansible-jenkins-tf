@@ -2,7 +2,6 @@ pipeline {
     agent any
     environment {
         TF_IN_AUTOMATION = 'true'
-        SSH_CREDENTIALS = credentials('ec2-ssh-key')
     }
     stages {
         stage('Init') {
@@ -28,15 +27,14 @@ pipeline {
         }
         stage('Ansible') {
             steps {
-                sshagent(['$SSH_CREDENTIALS']) {
-                    ansiblePlaybook(
-                            playbook: 'playbooks/main-playbook.yml',
-                            inventory: 'aws_hosts',
-                            extraVars: [
-                                'ansible_ssh_common_args': '-o StrictHostKeyChecking=no'
-                            ]
-                    )
-                }
+                ansiblePlaybook(
+                        playbook: 'playbooks/main-playbook.yml',
+                        inventory: 'aws_hosts',
+                        credentialsId: 'ec2-ssh-key',
+                        extraVars: [
+                            'ansible_ssh_common_args': '-o StrictHostKeyChecking=no'
+                        ]
+                )
             }
         }
         stage('Destroy') {
