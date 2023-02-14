@@ -26,10 +26,14 @@ pipeline {
             }
         }
         stage('Ansible'){
-            steps {
-                sh 'cat aws_hosts'
-                sh 'ansible-playbook -i aws_hosts --key-file /home/ec2-user/.ssh/main_key playbooks/main-playbook.yml'
-            }
+            ansiblePlaybook(
+                    playbook: 'playbooks/main-playbook.yml',
+                    inventory: 'aws_hosts',
+                    credentialsId: 'ec2-ssh-key',
+                    extrasVars: [
+                        'ansible_ssh_common_args': '-o StrictHostKeyChecking=no'
+                    ]
+                )
         }
         stage('Destroy') {
             steps {
