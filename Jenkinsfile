@@ -28,12 +28,9 @@ pipeline {
         stage('Ansible') {
             steps {
                 ansiblePlaybook(
-                        playbook: 'playbooks/main-playbook.yml',
-                        inventory: 'aws_hosts',
-                        credentialsId: 'ec2-ssh-key',
-                        extraVars: [
-                            'ansible_ssh_common_args': '-o StrictHostKeyChecking=no'
-                        ]
+                    playbook: 'playbooks/main-playbook.yml',
+                    inventory: 'aws_hosts',
+                    keyFile: '/home/ec2-user/.ssh/main_key'
                 )
             }
         }
