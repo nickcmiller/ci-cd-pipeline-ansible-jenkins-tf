@@ -33,7 +33,7 @@ pipeline {
                     extrasVars: [
                         'ansible_ssh_common_args': '-o StrictHostKeyChecking=no'
                     ]
-                )
+            )
         }
         stage('Destroy') {
             steps {
