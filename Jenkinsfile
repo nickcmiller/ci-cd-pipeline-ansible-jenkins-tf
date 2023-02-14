@@ -20,6 +20,11 @@ pipeline {
                 sh 'terraform apply -auto-approve -no-color'
             }
         }
+        stage('Ansible'){
+            steps {
+                ansiblePlaybook(credentials: 'ec2-ssh-key', inventory: 'aws_hosts', playbook: 'playbooks/main-playbook.yml')
+            }
+        }
         stage('Wait') {
             steps {
                 sh 'aws ec2 wait instance-status-ok --region us-east-1'
