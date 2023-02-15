@@ -32,16 +32,22 @@ pipeline {
                     MAIN_IP=\$(aws ec2 describe-instances --region us-east-1 --filters "Name=tag:Name,Values=main-instance-*" --query 'Reservations[].Instances[].PublicIpAddress' --output text)
                     echo \$MAIN_IP
                     ssh -i /home/ec2-user/.ssh/main_key ec2-user@\$MAIN_IP
+                    pwd
+                    whoami
+                    curl https://ifconfig.me
+                    
                 """
             }
         }
         stage('Ansible') {
             steps {
-                ansiblePlaybook(
-                    playbook: 'playbooks/main-playbook.yml',
-                    inventory: 'aws_hosts',
-                    credentialsId: 'ec2-ssh-key'
-                )
+                sh """
+                    MAIN_IP=\$(aws ec2 describe-instances --region us-east-1 --filters "Name=tag:Name,Values=main-instance-*" --query 'Reservations[].Instances[].PublicIpAddress' --output text)
+                    ansible-playbook playbooks/main-playbook.yml \
+                    --limit \$MAIN_IP \
+                    --private-key /home/ec2-user/.ssh/main_key \
+                    --user ec2-user
+                """
             }
         }
         stage('Destroy') {
