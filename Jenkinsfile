@@ -29,7 +29,7 @@ pipeline {
             steps {
                 sh "aws ec2 describe-instances --region us-east-1 --filters \"Name=tag:Name,Values=main-instance-*\" --query 'Reservations[].Instances[].PublicIpAddress' --output text"
                 sh "MAIN_IP=\$(aws ec2 describe-instances --region us-east-1 --filters \"Name=tag:Name,Values=main-instance-*\" --query 'Reservations[].Instances[].PublicIpAddress' --output text)"
-                sh "ssh -i /home/ec2-user/.ssh/main_key ec2-user@$MAIN_IP"
+                sh "ssh -i /home/ec2-user/.ssh/main_key ec2-user@${MAIN_IP}"
             }
         }
         stage('Ansible') {
