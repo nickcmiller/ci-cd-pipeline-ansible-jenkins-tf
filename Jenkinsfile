@@ -25,7 +25,6 @@ pipeline {
                 sh 'aws ec2 wait instance-status-ok --region us-east-1'
             }
         }
-        stages {
         stage('Test SSH') {
             steps {
                 sh 'aws ec2 describe-instances --region us-east-1 --filters "Name=tag:Name,Values=main-instance-*" --query 'Reservations[].Instances[].PublicIpAddress' --output text'
