@@ -25,6 +25,16 @@ pipeline {
                 sh 'aws ec2 wait instance-status-ok --region us-east-1'
             }
         }
+        stages {
+        stage('Test SSH') {
+            steps {
+                sh 'aws ec2 describe-instances --region us-east-1 --filters "Name=tag:Name,Values=main-instance-*" --query 'Reservations[].Instances[].PublicIpAddress' --output text'
+                sh "MAIN_IP=\$(aws ec2 describe-instances --region us-east-1 --filters \"Name=tag:Name,Values=main-instance-*\" --query 'Reservations[].Instances[].PublicIpAddress' --output text)"
+                withCredentials([sshUserPrivateKey(credentialsId: 'ec2-ssh-key', keyFileVariable: 'SSH_KEY')]) {
+                    sh "ssh -i $SSH_KEY ec2-user@$MAIN_IP"
+                }
+            }
+        }
         stage('Ansible') {
             steps {
                 ansiblePlaybook(
