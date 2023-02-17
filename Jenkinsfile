@@ -45,6 +45,7 @@ pipeline {
                     MAIN_IP=\$(aws ec2 describe-instances --region us-east-1 --filters "Name=tag:Name,Values=main-instance-*" --query 'Reservations[].Instances[].PublicIpAddress' --output text)
                     echo \$MAIN_IP
                     ssh-keyscan \$MAIN_IP >> ~/.ssh/known_hosts
+                    ls /home/ec2-user/.ssh/
                     ansible-playbook playbooks/main-playbook.yml \
                     --inventory aws_hosts
                     --private-key /home/ec2-user/.ssh/main_key \
