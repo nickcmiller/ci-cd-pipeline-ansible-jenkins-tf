@@ -32,10 +32,7 @@ pipeline {
                     echo \$MAIN_IP
                     ssh-keyscan \$MAIN_IP >> ~/.ssh/known_hosts
                     ssh -i /home/ec2-user/.ssh/main_key ec2-user@\$MAIN_IP
-                    pwd
-                    whoami
                     curl https://ifconfig.me
-                    
                 """
             }
         }
@@ -45,9 +42,9 @@ pipeline {
                     MAIN_IP=\$(aws ec2 describe-instances --region us-east-1 --filters "Name=tag:Name,Values=main-instance-*" --query 'Reservations[].Instances[].PublicIpAddress' --output text)
                     echo \$MAIN_IP
                     ssh-keyscan \$MAIN_IP >> ~/.ssh/known_hosts
-                    ls /home/ec2-user/.ssh/ \
+                    ls /home/ec2-user/.ssh/
                     ansible-playbook playbooks/main-playbook.yml \
-                    --inventory aws_hosts
+                    --inventory aws_hosts \
                     --private-key /home/ec2-user/.ssh/main_key \
                     --user ec2-user
                 """
